@@ -10,7 +10,20 @@ st.title('Energy Efficiency Dashboard')
 
 # Load Appliance Data (assuming you have a CSV or it's defined in the app)
 appliance_data = {
-    'BN': ['DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 'Insignia', 'Keplerx', 'Keystone'],
+    'BN': appliance_brands = [
+    'DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 
+    'Insignia', 'Keplerx', 'Keystone', 'LG', 'LUBECK', 'Midea', 'GE Profile', 'Gradient', 'GREE', 'HEMA', 
+    'BLACK+DECKER', 'Century', 'Comfort Aire', 'Danby', 'Noma', 'Noma iQ', 'OMNI MAX', 'Perfect aire',
+    'Richmond', 'ROVSUN', 'TCL', 'Vissani', 'Whirlpool', 'Windmill', 'ZOKOP', 'Electrolux', 'Samsung', 
+    'Signature Kitchen Suite', 'Maytag', 'Hotpoint', 'GE', 'Bertazzoni', 'Kenmore', 'Inglis', 'Amana', 
+    'Blomberg', 'Beko', 'Crosley', 'Asko', 'Miele', 'Speed Queen', 'Bosch', 'Fisher&Paykel', 'Summit', 
+    'Magic Chef', 'ELEMENT', 'AEG', 'BREDA', 'BLACK DECKER', 'Avanti', 'FINLUX', 'KOOLMORE', 
+    'Equator Advanced Appliances', 'Smad', 'Direct Supply', 'Criterion', 'Marathon', 'LG SIGNATURE', 
+    'TECHOMEY', 'A. O. Smith', '1HVAC', 'ACIQ', 'DIYCOOL', 'PolarWave', 'STEALTH', 'American', 
+    'RELIANCE WATER HEATERS', 'State', 'Lochinvar', 'Kepler', 'Bradford White', 'JETGLAS', 'SANCO2', 
+    'U.S. Craftmaster', 'AMERICAN STANDARD WATER HEATERS', 'Rheem', 'Ruud', 'stream33', 'Hubbell', 'Noritz', 
+    'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
+],
     'ApplianceType': ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', '', '', '', '', '', ''],
     'EnergyType': ['electric', 'gas', '', '', '', '', '', '', '', '']
 }
