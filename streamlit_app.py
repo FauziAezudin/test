@@ -8,7 +8,19 @@ from sklearn.model_selection import train_test_split
 # Title for the Streamlit App
 st.title('Energy Efficiency Dashboard')
 
-# Load Dataset
+# Load Appliance Data (assuming you have a CSV or it's defined in the app)
+appliance_data = {
+    'BN': ['DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 'Insignia', 'Keplerx', 'Keystone'],
+    'ApplianceType': ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', '', '', '', '', '', ''],
+    'EnergyType': ['electric', 'gas', '', '', '', '', '', '', '', '']
+}
+
+appliance_df = pd.DataFrame(appliance_data)
+
+# Display the appliance data (brands and types)
+st.write("Appliance Data:", appliance_df)
+
+# Now load the Energy Efficiency dataset
 file_path = 'EnergyDataset.csv'  # Replace with actual file path if needed
 dataset = pd.read_csv(file_path)
 
@@ -36,12 +48,24 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 model = DecisionTreeRegressor()
 model.fit(X_train, y_train)
 
-# User input
+# User input: Select appliance and energy type
 st.subheader("Enter Energy Use and Appliance Type to Predict Energy Efficiency")
 
-annual_energy_use = st.number_input("Enter Annual Energy Use", min_value=0.0)
-appliance_type = st.selectbox("Select Appliance Type", [0, 1, 2, 3])
+# Display a dropdown for selecting an appliance from the `ApplianceType`
+appliance_choice = st.selectbox("Select Appliance Type", appliance_df['ApplianceType'].dropna())
 
+# Map appliance choice to its type (you can add more logic if needed)
+appliance_type = appliance_df[appliance_df['ApplianceType'] == appliance_choice].index[0]
+
+# Display additional input for energy use
+annual_energy_use = st.number_input("Enter Annual Energy Use", min_value=0.0)
+
+# Map energy type based on selected appliance
+energy_type = appliance_df.loc[appliance_type, 'EnergyType'] if appliance_type in appliance_df.index else "Unknown"
+
+st.write(f"Energy Type: {energy_type}")
+
+# Create the user input DataFrame for prediction
 user_input_df = pd.DataFrame({'AnnualEnergyUse': [annual_energy_use], 'ApplianceType': [appliance_type]})
 
 # Prediction
