@@ -37,8 +37,18 @@ appliance_data = {
 
 appliance_df = pd.DataFrame(appliance_data)
 
-# Display the appliance data (brands and types)
-st.write("Appliance Data:", appliance_df)
+# Display individual tables for brand name, appliance type, and energy type
+st.subheader("Brand Names")
+brand_df = pd.DataFrame({'Brand Name': appliance_brands[:8]})  # Display the first 8 for simplicity
+st.dataframe(brand_df)
+
+st.subheader("Appliance Types")
+appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
+st.dataframe(appliance_type_df)
+
+st.subheader("Energy Types")
+energy_type_df = pd.DataFrame({'Energy Type': energy_types})
+st.dataframe(energy_type_df)
 
 # Now load the Energy Efficiency dataset
 file_path = 'EnergyDataset.csv'  # Replace with actual file path if needed
