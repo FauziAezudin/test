@@ -24,13 +24,18 @@ appliance_brands = [
     'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
 ]
 
+# Fill the lists for ApplianceType and EnergyType with empty strings or placeholders
+appliance_types = ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater'] + [''] * (len(appliance_brands) - 4)
+energy_types = ['electric', 'gas'] + [''] * (len(appliance_brands) - 2)
+
 # Appliance data dictionary
 appliance_data = {
     'BN': appliance_brands,
-    'ApplianceType': ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', '', '', '', '', '', ''],
-    'EnergyType': ['electric', 'gas', '', '', '', '', '', '', '', '']
+    'ApplianceType': appliance_types,
+    'EnergyType': energy_types
 }
 
+# Create the DataFrame
 appliance_df = pd.DataFrame(appliance_data)
 
 # Display the appliance data (brands and types)
