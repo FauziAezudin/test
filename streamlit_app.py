@@ -8,8 +8,9 @@ from sklearn.model_selection import train_test_split
 # Title for the Streamlit App
 st.title('Energy Efficiency Dashboard')
 
-# Define the appliance brands list
-appliance_brands = [
+# Load Appliance Data (assuming you have a CSV or it's defined in the app)
+appliance_data = {
+    'BN': appliance_brands = [
     'DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 
     'Insignia', 'Keplerx', 'Keystone', 'LG', 'LUBECK', 'Midea', 'GE Profile', 'Gradient', 'GREE', 'HEMA', 
     'BLACK+DECKER', 'Century', 'Comfort Aire', 'Danby', 'Noma', 'Noma iQ', 'OMNI MAX', 'Perfect aire',
@@ -22,20 +23,11 @@ appliance_brands = [
     'RELIANCE WATER HEATERS', 'State', 'Lochinvar', 'Kepler', 'Bradford White', 'JETGLAS', 'SANCO2', 
     'U.S. Craftmaster', 'AMERICAN STANDARD WATER HEATERS', 'Rheem', 'Ruud', 'stream33', 'Hubbell', 'Noritz', 
     'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
-]
-
-# Fill the lists for ApplianceType and EnergyType with empty strings or placeholders
-appliance_types = ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater'] + [''] * (len(appliance_brands) - 4)
-energy_types = ['electric', 'gas'] + [''] * (len(appliance_brands) - 2)
-
-# Appliance data dictionary
-appliance_data = {
-    'BN': appliance_brands,
-    'ApplianceType': appliance_types,
-    'EnergyType': energy_types
+],
+    'ApplianceType': ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', '', '', '', '', '', ''],
+    'EnergyType': ['electric', 'gas', '', '', '', '', '', '', '', '']
 }
 
-# Create the DataFrame
 appliance_df = pd.DataFrame(appliance_data)
 
 # Display the appliance data (brands and types)
@@ -92,23 +84,6 @@ user_input_df = pd.DataFrame({'AnnualEnergyUse': [annual_energy_use], 'Appliance
 # Prediction
 predicted_efficiency = model.predict(user_input_df)
 st.write(f"Predicted Energy Efficiency: {predicted_efficiency[0]}")
-
-# Define categories for energy efficiency
-def categorize_efficiency(efficiency_value):
-    if efficiency_value >= 90:
-        return 'A'
-    elif 75 <= efficiency_value < 90:
-        return 'B'
-    elif 50 <= efficiency_value < 75:
-        return 'C'
-    else:
-        return 'D'
-
-# Categorize the predicted energy efficiency
-efficiency_category = categorize_efficiency(predicted_efficiency[0])
-
-# Display the categorized result
-st.write(f"Energy Efficiency Rating: {efficiency_category}")
 
 # R-squared score
 st.write(f"R-squared: {model.score(X_test, y_test):.4f}")
