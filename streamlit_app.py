@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 
 # Load the dataset
-@st.cache
+@st.cache_data
 def load_data():
     file_path = 'EnergyDataset.csv'  # Adjust to path if using different source
     return pd.read_csv(file_path)
@@ -18,6 +18,7 @@ def preprocess_data(dataset):
     return train_test_split(X, Y, test_size=0.3, random_state=5)
 
 # Initialize and train the model
+@st.cache_resource
 def train_model(x_train, y_train):
     model = DecisionTreeRegressor()
     model.fit(x_train, y_train)
