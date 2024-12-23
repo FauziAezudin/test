@@ -93,5 +93,22 @@ user_input_df = pd.DataFrame({'AnnualEnergyUse': [annual_energy_use], 'Appliance
 predicted_efficiency = model.predict(user_input_df)
 st.write(f"Predicted Energy Efficiency: {predicted_efficiency[0]}")
 
+# Define categories for energy efficiency
+def categorize_efficiency(efficiency_value):
+    if efficiency_value >= 90:
+        return 'A'
+    elif 75 <= efficiency_value < 90:
+        return 'B'
+    elif 50 <= efficiency_value < 75:
+        return 'C'
+    else:
+        return 'D'
+
+# Categorize the predicted energy efficiency
+efficiency_category = categorize_efficiency(predicted_efficiency[0])
+
+# Display the categorized result
+st.write(f"Energy Efficiency Rating: {efficiency_category}")
+
 # R-squared score
 st.write(f"R-squared: {model.score(X_test, y_test):.4f}")
