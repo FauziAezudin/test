@@ -8,9 +8,8 @@ from sklearn.model_selection import train_test_split
 # Title for the Streamlit App
 st.title('Energy Efficiency Dashboard')
 
-# Load Appliance Data (assuming you have a CSV or it's defined in the app)
-appliance_data = {
-    'BN': appliance_brands = [
+# Define the appliance brands list
+appliance_brands = [
     'DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 
     'Insignia', 'Keplerx', 'Keystone', 'LG', 'LUBECK', 'Midea', 'GE Profile', 'Gradient', 'GREE', 'HEMA', 
     'BLACK+DECKER', 'Century', 'Comfort Aire', 'Danby', 'Noma', 'Noma iQ', 'OMNI MAX', 'Perfect aire',
@@ -23,7 +22,11 @@ appliance_data = {
     'RELIANCE WATER HEATERS', 'State', 'Lochinvar', 'Kepler', 'Bradford White', 'JETGLAS', 'SANCO2', 
     'U.S. Craftmaster', 'AMERICAN STANDARD WATER HEATERS', 'Rheem', 'Ruud', 'stream33', 'Hubbell', 'Noritz', 
     'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
-],
+]
+
+# Appliance data dictionary
+appliance_data = {
+    'BN': appliance_brands,
     'ApplianceType': ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', '', '', '', '', '', ''],
     'EnergyType': ['electric', 'gas', '', '', '', '', '', '', '', '']
 }
