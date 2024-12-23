@@ -1,106 +1,89 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
 
-# Title for the Streamlit App
-st.title('Energy Efficiency Dashboard')
+# Load the dataset
+@st.cache
+def load_data():
+    file_path = 'EnergyDataset.csv'  # Adjust to path if using different source
+    return pd.read_csv(file_path)
 
-# Appliance Data
-appliance_brands = [
-    'DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 
-    'Insignia', 'Keplerx', 'Keystone', 'LG', 'LUBECK', 'Midea', 'GE Profile', 'Gradient', 'GREE', 'HEMA', 
-    'BLACK+DECKER', 'Century', 'Comfort Aire', 'Danby', 'Noma', 'Noma iQ', 'OMNI MAX', 'Perfect aire',
-    'Richmond', 'ROVSUN', 'TCL', 'Vissani', 'Whirlpool', 'Windmill', 'ZOKOP', 'Electrolux', 'Samsung', 
-    'Signature Kitchen Suite', 'Maytag', 'Hotpoint', 'GE', 'Bertazzoni', 'Kenmore', 'Inglis', 'Amana', 
-    'Blomberg', 'Beko', 'Crosley', 'Asko', 'Miele', 'Speed Queen', 'Bosch', 'Fisher&Paykel', 'Summit', 
-    'Magic Chef', 'ELEMENT', 'AEG', 'BREDA', 'BLACK DECKER', 'Avanti', 'FINLUX', 'KOOLMORE', 
-    'Equator Advanced Appliances', 'Smad', 'Direct Supply', 'Criterion', 'Marathon', 'LG SIGNATURE', 
-    'TECHOMEY', 'A. O. Smith', '1HVAC', 'ACIQ', 'DIYCOOL', 'PolarWave', 'STEALTH', 'American', 
-    'RELIANCE WATER HEATERS', 'State', 'Lochinvar', 'Kepler', 'Bradford White', 'JETGLAS', 'SANCO2', 
-    'U.S. Craftmaster', 'AMERICAN STANDARD WATER HEATERS', 'Rheem', 'Ruud', 'stream33', 'Hubbell', 'Noritz', 
-    'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
-]
+# Preprocess the dataset
+def preprocess_data(dataset):
+    X = dataset[['AnnualEnergyUse', 'ApplianceType']]
+    Y = dataset['EnergyEfficiency']
+    return train_test_split(X, Y, test_size=0.3, random_state=5)
 
-# Corresponding Appliance Types and Energy Types
-appliance_types = ['Air conditioner', 'Electric cooking product', 'Clothes dryer', 'Water heater']
-energy_types = ['electric', 'gas', 'electric', 'gas']
+# Initialize and train the model
+def train_model(x_train, y_train):
+    model = DecisionTreeRegressor()
+    model.fit(x_train, y_train)
+    return model
 
-# Ensure all appliance types have matching energy types
-appliance_data = {
-    'BN': appliance_brands[:4],  # Only use the first 4 brands for simplicity
-    'ApplianceType': appliance_types,
-    'EnergyType': energy_types
-}
+# Main Streamlit app
+def main():
+    # Title and description
+    st.title("Energy Efficiency Prediction")
+    st.write("This app predicts the energy efficiency of appliances based on energy use and appliance type.")
+    
+    # Load dataset
+    dataset = load_data()
+    
+    # Display dataset info
+    if st.checkbox("Show dataset info"):
+        st.write("Dataset Columns:")
+        st.write(dataset.columns)
+        st.write("Dataset Summary:")
+        st.write(dataset.info())
+    
+    # Split data and train the model
+    X_train, X_test, y_train, y_test = preprocess_data(dataset)
+    model = train_model(X_train, y_train)
+    
+    # Display R-squared
+    st.write(f"R-squared score: {model.score(X_test, y_test):.4f}")
+    
+    # Prediction section
+    st.subheader("Predict Energy Efficiency")
+    annual_energy_use = st.number_input("Enter Annual Energy Use", min_value=0.0, max_value=10000.0, value=1000.0)
+    appliance_type = st.selectbox("Select Appliance Type", [0, 1, 2, 3], format_func=lambda x: ['Air Conditioner', 'Electric Cooking', 'Clothes Dryer', 'Water Heater'][x])
+    
+    user_input = pd.DataFrame({
+        'AnnualEnergyUse': [annual_energy_use],
+        'ApplianceType': [appliance_type]
+    })
+    
+    # Predict energy efficiency
+    predicted_efficiency = model.predict(user_input)
+    
+    # Map to rating
+    rating_map = {0: 'A', 1: 'B', 2: 'C', 3: 'D'}
+    predicted_rating = rating_map.get(int(predicted_efficiency[0]), 'Unknown')
+    
+    st.write(f"Predicted Energy Efficiency Rating: {predicted_rating}")
+    
+    # Visualizations
+    st.subheader("Visualize Data")
+    fig, ax = plt.subplots()
+    ax.scatter(dataset['AnnualEnergyUse'], dataset['EnergyEfficiency'], label="Energy Efficiency")
+    ax.set_xlabel('Annual Energy Use')
+    ax.set_ylabel('Energy Efficiency')
+    st.pyplot(fig)
+    
+    # 3D scatter plot
+    st.subheader("3D Visualization")
+    fig = plt.figure(figsize=(11, 11))
+    ax = fig.add_subplot(111, projection='3d')
+    sc = ax.scatter(dataset['AnnualEnergyUse'], dataset['ApplianceType'], dataset['EnergyEfficiency'], c=dataset['EnergyEfficiency'], cmap='viridis')
+    ax.set_xlabel("Annual Energy Use")
+    ax.set_ylabel("Appliance Type")
+    ax.set_zlabel("Energy Efficiency")
+    cbar = plt.colorbar(sc)
+    cbar.set_label('Energy Efficiency')
+    st.pyplot(fig)
 
-# Create DataFrames for each category
-appliance_df = pd.DataFrame(appliance_data)
-
-# Display separate tables for Brand Names, Appliance Types, and Energy Types
-st.subheader("Brand Names")
-brand_df = pd.DataFrame({'Brand Name': appliance_brands[:4]})
-st.dataframe(brand_df)
-
-st.subheader("Appliance Types")
-appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
-st.dataframe(appliance_type_df)
-
-st.subheader("Energy Types")
-energy_type_df = pd.DataFrame({'Energy Type': energy_types})
-st.dataframe(energy_type_df)
-
-# Now load the Energy Efficiency dataset (replace with your actual file path)
-file_path = 'EnergyDataset.csv'  # Replace with actual file path if needed
-dataset = pd.read_csv(file_path)
-
-# Display dataset information
-st.write("Features (Columns):", dataset.columns)
-st.write("Dataset Info:", dataset.info())
-
-# Show a correlation matrix
-corr = dataset.corr()
-st.write("Correlation Matrix:", corr)
-
-# Plot some graphs
-st.subheader("Scatter Plot of Annual Energy Use vs Energy Efficiency")
-fig, ax = plt.subplots()
-ax.scatter(dataset['AnnualEnergyUse'], dataset['EnergyEfficiency'], marker='o')
-ax.set_xlabel('Annual Energy Use')
-ax.set_ylabel('Energy Efficiency')
-st.pyplot(fig)
-
-# Train the model (you can use your existing code for training here)
-X = dataset[['AnnualEnergyUse', 'ApplianceType']]
-y = dataset['EnergyEfficiency']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=5)
-
-model = DecisionTreeRegressor()
-model.fit(X_train, y_train)
-
-# User input: Select appliance and energy type
-st.subheader("Enter Energy Use and Appliance Type to Predict Energy Efficiency")
-
-# Display a dropdown for selecting an appliance from the `ApplianceType`
-appliance_choice = st.selectbox("Select Appliance Type", appliance_df['ApplianceType'].dropna())
-
-# Correctly map appliance choice to its type (the index value from appliance_df)
-appliance_type = appliance_df[appliance_df['ApplianceType'] == appliance_choice].index[0]
-
-# Display additional input for energy use
-annual_energy_use = st.number_input("Enter Annual Energy Use", min_value=0.0)
-
-# Map energy type based on selected appliance
-energy_type = appliance_df.loc[appliance_type, 'EnergyType'] if appliance_type in appliance_df.index else "Unknown"
-
-st.write(f"Energy Type: {energy_type}")
-
-# Create the user input DataFrame for prediction
-user_input_df = pd.DataFrame({'AnnualEnergyUse': [annual_energy_use], 'ApplianceType': [appliance_type]})
-
-# Prediction
-predicted_efficiency = model.predict(user_input_df)
-st.write(f"Predicted Energy Efficiency: {predicted_efficiency[0]}")
-
-# R-squared score
-st.write(f"R-squared: {model.score(X_test, y_test):.4f}")
+if __name__ == "__main__":
+    main()
