@@ -49,7 +49,7 @@ def main():
     
     # Prediction section
     st.subheader("Predict Energy Efficiency")
-    annual_energy_use = st.number_input("Enter Annual Energy Use", min_value=0.0, max_value=10000.0, value=1000.0)
+    annual_energy_use = st.number_input("Enter Annual Energy Use (in integer)", min_value=0, max_value=10000, value=1000, step=1)
     appliance_type = st.selectbox("Select Appliance Type", [0, 1, 2, 3], format_func=lambda x: ['Air Conditioner', 'Electric Cooking', 'Clothes Dryer', 'Water Heater'][x])
     
     user_input = pd.DataFrame({
