@@ -35,21 +35,22 @@ appliance_data = {
 }
 
 # Create DataFrames for each category
-brand_df = pd.DataFrame({'Brand Name': appliance_brands[:4]})
-appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
-energy_type_df = pd.DataFrame({'Energy Type': energy_types})
+appliance_df = pd.DataFrame(appliance_data)
 
 # Display separate tables for Brand Names, Appliance Types, and Energy Types
 st.subheader("Brand Names")
+brand_df = pd.DataFrame({'Brand Name': appliance_brands[:4]})
 st.dataframe(brand_df)
 
 st.subheader("Appliance Types")
+appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
 st.dataframe(appliance_type_df)
 
 st.subheader("Energy Types")
+energy_type_df = pd.DataFrame({'Energy Type': energy_types})
 st.dataframe(energy_type_df)
 
-# Now load the Energy Efficiency dataset (you can replace this with your actual dataset)
+# Now load the Energy Efficiency dataset (replace with your actual file path)
 file_path = 'EnergyDataset.csv'  # Replace with actual file path if needed
 dataset = pd.read_csv(file_path)
 
@@ -83,7 +84,7 @@ st.subheader("Enter Energy Use and Appliance Type to Predict Energy Efficiency")
 # Display a dropdown for selecting an appliance from the `ApplianceType`
 appliance_choice = st.selectbox("Select Appliance Type", appliance_df['ApplianceType'].dropna())
 
-# Map appliance choice to its type (you can add more logic if needed)
+# Correctly map appliance choice to its type (the index value from appliance_df)
 appliance_type = appliance_df[appliance_df['ApplianceType'] == appliance_choice].index[0]
 
 # Display additional input for energy use
