@@ -28,7 +28,7 @@ def train_model(x_train, y_train):
 def main():
     # Title and description
     st.title("Energy Efficiency Prediction")
-    st.write("This app predicts the energy efficiency of appliances based on Annual energy use and appliance type.")
+    st.write("This app predicts the energy efficiency of appliances based on annual energy use and appliance type.")
     
     # Load dataset
     dataset = load_data()
