@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
@@ -8,7 +7,7 @@ from sklearn.model_selection import train_test_split
 # Title for the Streamlit App
 st.title('Energy Efficiency Dashboard')
 
-# Load Appliance Data (assuming you have a CSV or it's defined in the app)
+# Appliance Data
 appliance_brands = [
     'DELLA', 'Friedrich', 'Frigidaire', 'Frigidaire Gallery', 'Hisense', 'Honeywell', 'Hykolity', 
     'Insignia', 'Keplerx', 'Keystone', 'LG', 'LUBECK', 'Midea', 'GE Profile', 'Gradient', 'GREE', 'HEMA', 
@@ -24,33 +23,33 @@ appliance_brands = [
     'VAUGHN THERMAL', 'AquaThermAire', 'Rinnai', 'Smart Solar'
 ]
 
-# For simplicity, use a smaller list of appliances and energy types (must match length of `BN`)
-appliance_types = ['Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater', 'Air conditioner', 'Electric cooking product', 'Clothes dryers', 'Water heater']
-energy_types = ['electric', 'gas', 'electric', 'gas', 'electric', 'gas', 'electric', 'gas']
+# Corresponding Appliance Types and Energy Types
+appliance_types = ['Air conditioner', 'Electric cooking product', 'Clothes dryer', 'Water heater']
+energy_types = ['electric', 'gas', 'electric', 'gas']
 
-# Ensure the lists have the same length
+# Ensure all appliance types have matching energy types
 appliance_data = {
-    'BN': appliance_brands[:8],  # Limiting to 8 items for simplicity
+    'BN': appliance_brands[:4],  # Only use the first 4 brands for simplicity
     'ApplianceType': appliance_types,
     'EnergyType': energy_types
 }
 
-appliance_df = pd.DataFrame(appliance_data)
+# Create DataFrames for each category
+brand_df = pd.DataFrame({'Brand Name': appliance_brands[:4]})
+appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
+energy_type_df = pd.DataFrame({'Energy Type': energy_types})
 
-# Display individual tables for brand name, appliance type, and energy type
+# Display separate tables for Brand Names, Appliance Types, and Energy Types
 st.subheader("Brand Names")
-brand_df = pd.DataFrame({'Brand Name': appliance_brands[:8]})  # Display the first 8 for simplicity
 st.dataframe(brand_df)
 
 st.subheader("Appliance Types")
-appliance_type_df = pd.DataFrame({'Appliance Type': appliance_types})
 st.dataframe(appliance_type_df)
 
 st.subheader("Energy Types")
-energy_type_df = pd.DataFrame({'Energy Type': energy_types})
 st.dataframe(energy_type_df)
 
-# Now load the Energy Efficiency dataset
+# Now load the Energy Efficiency dataset (you can replace this with your actual dataset)
 file_path = 'EnergyDataset.csv'  # Replace with actual file path if needed
 dataset = pd.read_csv(file_path)
 
