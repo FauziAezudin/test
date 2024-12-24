@@ -8,7 +8,7 @@ from sklearn.tree import DecisionTreeRegressor
 # Load the dataset
 @st.cache_data
 def load_data():
-    file_path = 'EnergyDataset.csv'  # Adjust to path if using different source
+    file_path = 'EnergyDataset.csv'  # Adjust the path to your dataset (if using a local dataset)
     return pd.read_csv(file_path)
 
 # Preprocess the dataset
