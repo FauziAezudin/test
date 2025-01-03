@@ -4,7 +4,6 @@ import numpy as np
 import zipfile
 import os
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.cluster import KMeans
 
 # Helper function to extract the dataset zip
@@ -29,11 +28,22 @@ def perform_clustering(file_path, appliance_name):
     # Add cluster labels to the DataFrame
     dataset['cluster'] = kmeans.labels_
     
-    # Display the clusters in a scatter plot
+    # Create a Matplotlib figure for the scatter plot
+    fig, ax = plt.subplots()
     cluster_palette = {0: 'red', 1: 'green'}
-    st.write(f"### Clusters of Usage Duration and Energy Consumption for {appliance_name}")
-    sns.scatterplot(data=dataset, x='usage_duration_minutes', y='energy_consumption_kWh', hue='cluster', palette=cluster_palette)
-    st.pyplot()
+    
+    for cluster_id, color in cluster_palette.items():
+        cluster_data = dataset[dataset['cluster'] == cluster_id]
+        ax.scatter(cluster_data['usage_duration_minutes'], cluster_data['energy_consumption_kWh'], 
+                   color=color, label=f"Cluster {cluster_id}")
+    
+    ax.set_title(f"Clusters of Usage Duration and Energy Consumption for {appliance_name}")
+    ax.set_xlabel("Usage Duration (minutes)")
+    ax.set_ylabel("Energy Consumption (kWh)")
+    ax.legend()
+    
+    # Display the plot in Streamlit
+    st.pyplot(fig)
     
     return kmeans
 
