@@ -4,6 +4,7 @@ import numpy as np
 import zipfile
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.cluster import KMeans
 
 # Helper function to extract the dataset zip
@@ -13,8 +14,8 @@ def extract_zip(zip_path, extract_to_path):
         zip_ref.extractall(extract_to_path)
     st.write("Datasets extracted successfully.")
 
-# Helper function to perform clustering
-def perform_clustering(file_path, appliance_name):
+# Helper function to perform clustering with Seaborn
+def perform_clustering_with_seaborn(file_path, appliance_name):
     # Load the dataset into a pandas DataFrame
     dataset = pd.read_csv(file_path)
     
@@ -28,19 +29,23 @@ def perform_clustering(file_path, appliance_name):
     # Add cluster labels to the DataFrame
     dataset['cluster'] = kmeans.labels_
     
-    # Create a Matplotlib figure for the scatter plot
-    fig, ax = plt.subplots()
-    cluster_palette = {0: 'red', 1: 'green'}
+    # Create a scatter plot using Seaborn
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.scatterplot(
+        x='usage_duration_minutes', 
+        y='energy_consumption_kWh', 
+        hue='cluster', 
+        palette=['red', 'green'], 
+        data=dataset,
+        style='cluster', 
+        ax=ax
+    )
     
-    for cluster_id, color in cluster_palette.items():
-        cluster_data = dataset[dataset['cluster'] == cluster_id]
-        ax.scatter(cluster_data['usage_duration_minutes'], cluster_data['energy_consumption_kWh'], 
-                   color=color, label=f"Cluster {cluster_id}")
-    
-    ax.set_title(f"Clusters of Usage Duration and Energy Consumption for {appliance_name}")
-    ax.set_xlabel("Usage Duration (minutes)")
-    ax.set_ylabel("Energy Consumption (kWh)")
-    ax.legend()
+    # Customize the plot
+    ax.set_title(f"Clusters of Usage Duration and Energy Consumption for {appliance_name}", fontsize=16)
+    ax.set_xlabel("Usage Duration (minutes)", fontsize=12)
+    ax.set_ylabel("Energy Consumption (kWh)", fontsize=12)
+    ax.legend(title="Cluster", title_fontsize='13', fontsize='10')
     
     # Display the plot in Streamlit
     st.pyplot(fig)
@@ -75,7 +80,7 @@ appliance = st.selectbox(
 )
 
 # Perform clustering based on selected appliance
-kmeans = perform_clustering(appliance_files[appliance], appliance)
+kmeans = perform_clustering_with_seaborn(appliance_files[appliance], appliance)
 
 # Input fields for user to enter energy consumption and usage duration
 usage_duration = st.number_input("Enter the usage duration (in minutes):", min_value=1, value=30)
